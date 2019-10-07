@@ -1,4 +1,4 @@
-package Generator;
+package generator;
 import java.util.Random;
 
 public class CnfGenerator {
@@ -30,6 +30,7 @@ public class CnfGenerator {
 
         for (int i = 0; i < clauseLen; i++) {
             boolean neg = randomGenerator.nextBoolean();
+
         }
 
         return clause;

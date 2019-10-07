@@ -1,4 +1,4 @@
-package Common;
+package common;
 
 public class Literal {
     public boolean isNeg;
