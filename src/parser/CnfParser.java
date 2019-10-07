@@ -1,11 +1,18 @@
 package parser;
+import common.Literal;
+import common.Token;
+
+import java.util.ArrayList;
+import java.util.Scanner;
 
 public class CnfParser {
 
     private static CnfParser instance = null; // Singleton instance
 
-    private CnfParser() {
+    private static ArrayList<ArrayList<Literal>> parsedInformation;
 
+    private CnfParser() {
+        parsedInformation = new ArrayList<ArrayList<Literal>>();
     }
 
     // Retrieves the parser instance
@@ -17,9 +24,48 @@ public class CnfParser {
         return instance;
     }
 
-    // Parses a string representing a formula in CNF,
-    // and store the information
+    // Parses a string representing a formula in CNF, and
+    // stores the information.
     public static void parseCnf(String cnf) {
-        System.out.println("YES");
+
+        String[] clauses = cnf.split(Token.AND_TOKEN);
+
+
+        int numberOfClauses = 0;
+        int numberOfLiterals = 0;
+
+        for (int i = 0; i < clauses.length; i ++) {
+
+            // Add new array to represent clause
+            parsedInformation.add(new ArrayList<Literal>());
+
+            // Substring the clause to remove left parenthesis and right parenthesis
+            String clause = clauses[i].substring(1, clauses[i].length() - 1);
+
+            String[] literals = clause.split(Token.OR_TOKEN);
+
+            for (int j = 0; j < literals.length; j ++) {
+
+                int value = Integer.parseInt(literals[j]);
+
+                if (value < 0)
+                    parsedInformation.get(i).add(new Literal(true, value * -1));
+                else
+                    parsedInformation.get(i).add(new Literal(false, value));
+            }
+        }
+
+        printParsedInformation();
     }
+
+    private static void printParsedInformation() {
+
+        for (int i = 0; i < parsedInformation.size(); i ++) {
+            for (int j = 0; j < parsedInformation.get(i).size(); j ++) {
+                System.out.print(parsedInformation.get(i).get(j) + " ");
+            }
+            System.out.println();
+        }
+    }
+
 }

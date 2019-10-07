@@ -9,6 +9,7 @@ public class Main {
 
         String CNF = cnfGenerator.generateCNF(5, 1, 4, 8);
         System.out.println("CNF: " + CNF);
+
         cnfParser.parseCnf(CNF);
     }
 }

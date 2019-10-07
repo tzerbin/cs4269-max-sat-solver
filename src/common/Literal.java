@@ -8,4 +8,9 @@ public class Literal {
         this.isNeg = isNeg;
         this.proposition = proposition;
     }
+
+    @Override
+    public String toString() {
+        return isNeg? Integer.toString(-proposition) : Integer.toString(proposition);
+    }
 }
