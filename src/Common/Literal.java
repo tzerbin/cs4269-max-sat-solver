@@ -1,5 +1,6 @@
-class Literal {
+package Common;
 
+public class Literal {
     public boolean isNeg;
     public int proposition; // For scalability
 

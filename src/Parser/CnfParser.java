@@ -1,4 +1,6 @@
-class CnfParser {
+package Parser;
+
+public class CnfParser {
 
     private static CnfParser instance = null; // Singleton instance
 
