@@ -10,6 +10,7 @@ public class CnfParser {
     private static CnfParser instance = null; // Singleton instance
 
     private static ArrayList<ArrayList<Literal>> parsedInformation;
+    private static ArrayList<Literal> literalsInformation;
 
     private CnfParser() {
         parsedInformation = new ArrayList<ArrayList<Literal>>();
@@ -29,7 +30,6 @@ public class CnfParser {
     public static void parseCnf(String cnf) {
 
         String[] clauses = cnf.split(Token.AND_TOKEN);
-
 
         int numberOfClauses = 0;
         int numberOfLiterals = 0;
@@ -55,10 +55,12 @@ public class CnfParser {
             }
         }
 
-        printParsedInformation();
+        generateInformationFromRawData();
+
+        //printParsedInformation();
     }
 
-    private static void printParsedInformation() {
+    public static void printParsedInformation() {
 
         for (int i = 0; i < parsedInformation.size(); i ++) {
             for (int j = 0; j < parsedInformation.get(i).size(); j ++) {
@@ -68,4 +70,25 @@ public class CnfParser {
         }
     }
 
+    public static ArrayList<ArrayList<Literal>> getParsedInformation() {
+        return parsedInformation;
+    }
+
+    public static ArrayList<Literal> getAllLiterals() {
+        return literalsInformation;
+    }
+
+    private static void generateInformationFromRawData() {
+        generateListOfLiterals();
+    }
+
+    private static void generateListOfLiterals() {
+        if (parsedInformation == null)
+            return;
+
+        literalsInformation = new ArrayList<Literal>();
+        for (int i = 0; i < parsedInformation.size(); i ++)
+            for (int j = 0; j < parsedInformation.get(i).size(); j ++)
+                literalsInformation.add(parsedInformation.get(i).get(j));
+    }
 }
