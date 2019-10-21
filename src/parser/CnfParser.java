@@ -3,6 +3,8 @@ import common.Literal;
 import common.Token;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Scanner;
 
 public class CnfParser {
@@ -11,6 +13,7 @@ public class CnfParser {
 
     private static ArrayList<ArrayList<Literal>> parsedInformation;
     private static ArrayList<Literal> literalsInformation;
+    private static ArrayList<Integer> propositionsInformation;
 
     private CnfParser() {
         clearData();
@@ -89,6 +92,7 @@ public class CnfParser {
     }
 
     private static void generateInformationFromRawData() {
+        generateListOfPropositions();
         generateListOfLiterals();
     }
 
@@ -99,6 +103,25 @@ public class CnfParser {
         for (int i = 0; i < parsedInformation.size(); i ++)
             for (int j = 0; j < parsedInformation.get(i).size(); j ++)
                 literalsInformation.add(parsedInformation.get(i).get(j));
+    }
+
+    private static void generateListOfPropositions() {
+        if (parsedInformation == null)
+            return;
+
+        HashSet<Integer> hm = new HashSet<Integer>();
+
+        for (int i = 0; i < parsedInformation.size(); i ++) {
+            for (int j = 0; j < parsedInformation.get(i).size(); j++) {
+                Integer proposition = parsedInformation.get(i).get(j).proposition;
+                if (!hm.contains(proposition)) {
+                    propositionsInformation.add(proposition);
+                    hm.add(proposition);
+                }
+            }
+        }
+
+        Collections.sort(propositionsInformation);
     }
 
     private static void clearData() {
