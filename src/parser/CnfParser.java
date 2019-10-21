@@ -13,7 +13,7 @@ public class CnfParser {
     private static ArrayList<Literal> literalsInformation;
 
     private CnfParser() {
-        parsedInformation = new ArrayList<ArrayList<Literal>>();
+        clearData();
     }
 
     // Retrieves the parser instance
@@ -28,6 +28,8 @@ public class CnfParser {
     // Parses a string representing a formula in CNF, and
     // stores the information.
     public static void parseCnf(String cnf) {
+
+        clearData();
 
         String[] clauses = cnf.split(Token.AND_TOKEN);
 
@@ -58,6 +60,7 @@ public class CnfParser {
         generateInformationFromRawData();
 
         //printParsedInformation();
+        //printLiteralsInformation();
     }
 
     public static void printParsedInformation() {
@@ -68,6 +71,13 @@ public class CnfParser {
             }
             System.out.println();
         }
+    }
+
+    public static void printLiteralsInformation() {
+        for (int i = 0; i < literalsInformation.size(); i ++)
+            System.out.print(literalsInformation.get(i) + " ");
+
+        System.out.println();
     }
 
     public static ArrayList<ArrayList<Literal>> getParsedInformation() {
@@ -86,9 +96,13 @@ public class CnfParser {
         if (parsedInformation == null)
             return;
 
-        literalsInformation = new ArrayList<Literal>();
         for (int i = 0; i < parsedInformation.size(); i ++)
             for (int j = 0; j < parsedInformation.get(i).size(); j ++)
                 literalsInformation.add(parsedInformation.get(i).get(j));
+    }
+
+    private static void clearData() {
+        parsedInformation = new ArrayList<ArrayList<Literal>>();
+        literalsInformation = new ArrayList<Literal>();
     }
 }
