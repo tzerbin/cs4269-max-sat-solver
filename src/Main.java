@@ -1,5 +1,7 @@
 import generator.CnfGenerator;
 import parser.CnfParser;
+import solver.MaxSatSolver;
+
 import java.util.Scanner;
 
 public class Main {
@@ -18,6 +20,10 @@ public class Main {
         String CNF = cnfGenerator.generateCNF(numClauses, clauseMinLen, clauseMaxLen, maxProp);
         System.out.println("CNF: " + CNF);
 
-        cnfParser.parseCnf(CNF);
+        MaxSatSolver maxSatSolver = MaxSatSolver.getInstance();
+        maxSatSolver.bruteForceSolve(CNF);
+
+        System.out.println("Max clauses: " + maxSatSolver.getMaxClausesSatisfied());
+        System.out.println("Truth assignment: " + maxSatSolver.getTruthAssignment().toString());
     }
 }
