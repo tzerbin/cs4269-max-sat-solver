@@ -91,6 +91,10 @@ public class CnfParser {
         return literalsInformation;
     }
 
+    public static ArrayList<Integer> getAllPropositions() {
+        return propositionsInformation;
+    }
+
     private static void generateInformationFromRawData() {
         generateListOfPropositions();
         generateListOfLiterals();
