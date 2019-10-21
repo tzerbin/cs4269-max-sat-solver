@@ -131,5 +131,6 @@ public class CnfParser {
     private static void clearData() {
         parsedInformation = new ArrayList<ArrayList<Literal>>();
         literalsInformation = new ArrayList<Literal>();
+        propositionsInformation = new ArrayList<Integer>();
     }
 }
