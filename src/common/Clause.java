@@ -12,4 +12,9 @@ public class Clause {
     public void addLiteral(Literal l) {
         literals.add(l);
     }
+
+    public int getLength() { return literals.size(); }
+
+    public Literal getLiteralAt(int i) { return literals.get(i); }
+
 }
