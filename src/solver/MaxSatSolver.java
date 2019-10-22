@@ -57,16 +57,19 @@ public class MaxSatSolver {
         for (int i = 0; i < iterations; i++) {
             int maxCount = 0;
             HashMap<Integer, Boolean> currAssignment = getTruthAssignment(i, assignment, props);
+            ArrayList<Clause> potentialSatisfiedClauses = new ArrayList<Clause>();
 
             //check satisfiability of each clause
             for (int j = 0; j < parsedInformation.size(); j++) {
                 if (isClauseSat(parsedInformation.get(j), currAssignment)) {
                     maxCount++;
+                    potentialSatisfiedClauses.add(parsedInformation.get(j));
                 }
             }
             if (maxCount > maxClausesSatisfied) {
                 maxClausesSatisfied = maxCount;
                 truthAssignment.putAll(currAssignment);
+                clausesSatisfied = potentialSatisfiedClauses;
             }
         }
     }
@@ -97,7 +100,7 @@ public class MaxSatSolver {
         return assignment;
     }
 
-    public static boolean isClauseSat(Clause clause, HashMap<Integer, Boolean> assignment){
+    public static boolean isClauseSat(Clause clause, HashMap<Integer, Boolean> assignment) {
         for (int i = 0; i < clause.getLength(); i++) {
             int prop = clause.getLiteralAt(i).proposition;
             boolean isNeg = clause.getLiteralAt(i).isNeg;
@@ -109,6 +112,18 @@ public class MaxSatSolver {
             }
         }
         return false;
+    }
+
+    public static void printClausesSat() {
+        System.out.print("Satisfied clauses: ");
+        for (int i = 0; i < clausesSatisfied.size(); i ++) {
+            System.out.print(clausesSatisfied.get(i));
+            if (i < clausesSatisfied.size() - 1)
+                System.out.print(", ");
+        }
+
+
+        System.out.println();
     }
 
 }

@@ -24,6 +24,7 @@ public class Main {
         maxSatSolver.bruteForceSolve(CNF);
 
         System.out.println("Max clauses: " + maxSatSolver.getMaxClausesSatisfied());
+        maxSatSolver.printClausesSat();
         System.out.println("Truth assignment: " + maxSatSolver.getTruthAssignment().toString());
     }
 }
