@@ -1,17 +1,17 @@
 package parser;
+import common.Clause;
 import common.Literal;
 import common.Token;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Scanner;
 
 public class CnfParser {
 
     private static CnfParser instance = null; // Singleton instance
 
-    private static ArrayList<ArrayList<Literal>> parsedInformation;
+    private static ArrayList<Clause> parsedInformation;
     private static ArrayList<Literal> literalsInformation;
     private static ArrayList<Integer> propositionsInformation;
 
@@ -42,7 +42,7 @@ public class CnfParser {
         for (int i = 0; i < clauses.length; i ++) {
 
             // Add new array to represent clause
-            parsedInformation.add(new ArrayList<Literal>());
+            parsedInformation.add(new Clause());
 
             // Substring the clause to remove left parenthesis and right parenthesis
             String clause = clauses[i].substring(1, clauses[i].length() - 1);
@@ -54,9 +54,9 @@ public class CnfParser {
                 int value = Integer.parseInt(literals[j]);
 
                 if (value < 0)
-                    parsedInformation.get(i).add(new Literal(true, value * -1));
+                    parsedInformation.get(i).addLiteral(new Literal(true, value * -1));
                 else
-                    parsedInformation.get(i).add(new Literal(false, value));
+                    parsedInformation.get(i).addLiteral(new Literal(false, value));
             }
         }
 
@@ -69,8 +69,8 @@ public class CnfParser {
     public static void printParsedInformation() {
 
         for (int i = 0; i < parsedInformation.size(); i ++) {
-            for (int j = 0; j < parsedInformation.get(i).size(); j ++) {
-                System.out.print(parsedInformation.get(i).get(j) + " ");
+            for (int j = 0; j < parsedInformation.get(i).getLength(); j ++) {
+                System.out.print(parsedInformation.get(i).getLiteralAt(j) + " ");
             }
             System.out.println();
         }
@@ -83,7 +83,7 @@ public class CnfParser {
         System.out.println();
     }
 
-    public static ArrayList<ArrayList<Literal>> getParsedInformation() {
+    public static ArrayList<Clause> getParsedInformation() {
         return parsedInformation;
     }
 
@@ -105,8 +105,8 @@ public class CnfParser {
             return;
 
         for (int i = 0; i < parsedInformation.size(); i ++)
-            for (int j = 0; j < parsedInformation.get(i).size(); j ++)
-                literalsInformation.add(parsedInformation.get(i).get(j));
+            for (int j = 0; j < parsedInformation.get(i).getLength(); j ++)
+                literalsInformation.add(parsedInformation.get(i).getLiteralAt(j));
     }
 
     private static void generateListOfPropositions() {
@@ -116,8 +116,8 @@ public class CnfParser {
         HashSet<Integer> hm = new HashSet<Integer>();
 
         for (int i = 0; i < parsedInformation.size(); i ++) {
-            for (int j = 0; j < parsedInformation.get(i).size(); j++) {
-                Integer proposition = parsedInformation.get(i).get(j).proposition;
+            for (int j = 0; j < parsedInformation.get(i).getLength(); j++) {
+                Integer proposition = parsedInformation.get(i).getLiteralAt(j).proposition;
                 if (!hm.contains(proposition)) {
                     propositionsInformation.add(proposition);
                     hm.add(proposition);
@@ -129,7 +129,7 @@ public class CnfParser {
     }
 
     private static void clearData() {
-        parsedInformation = new ArrayList<ArrayList<Literal>>();
+        parsedInformation = new ArrayList<Clause>();
         literalsInformation = new ArrayList<Literal>();
         propositionsInformation = new ArrayList<Integer>();
     }

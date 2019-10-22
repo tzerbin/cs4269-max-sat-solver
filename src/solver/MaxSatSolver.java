@@ -46,7 +46,7 @@ public class MaxSatSolver {
         CnfParser parser = CnfParser.getInstance();
         parser.parseCnf(cnf);
 
-        ArrayList<ArrayList<Literal>> parsedInformation = parser.getParsedInformation();
+        ArrayList<Clause> parsedInformation = parser.getParsedInformation();
         ArrayList<Integer> props = parser.getAllPropositions();
         int numProps = props.size();
 
@@ -97,10 +97,10 @@ public class MaxSatSolver {
         return assignment;
     }
 
-    public static boolean isClauseSat(ArrayList<Literal> clause, HashMap<Integer, Boolean> assignment){
-        for (int i = 0; i < clause.size(); i++) {
-            int prop = clause.get(i).proposition;
-            boolean isNeg = clause.get(i).isNeg;
+    public static boolean isClauseSat(Clause clause, HashMap<Integer, Boolean> assignment){
+        for (int i = 0; i < clause.getLength(); i++) {
+            int prop = clause.getLiteralAt(i).proposition;
+            boolean isNeg = clause.getLiteralAt(i).isNeg;
 
             boolean assg = assignment.get(prop);
 
