@@ -30,7 +30,7 @@ public class CnfGenerator {
     private static String generateClause (int clauseMinLen, int clauseMaxLen, int maxProp) {
         String clause = "(";
         Random randomGenerator = new Random();
-        int clauseLen = randomGenerator.nextInt(clauseMaxLen) + clauseMinLen;
+        int clauseLen = randomGenerator.nextInt(clauseMaxLen - clauseMinLen + 1) + clauseMinLen;
 
         for (int i = 0; i < clauseLen; i++) {
             boolean neg = randomGenerator.nextBoolean();
