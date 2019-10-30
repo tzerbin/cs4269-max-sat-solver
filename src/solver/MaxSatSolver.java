@@ -15,11 +15,13 @@ public class MaxSatSolver {
     private static int maxClausesSatisfied;
     private static ArrayList<Clause> clausesSatisfied;
     private static HashMap<Integer, Boolean> truthAssignment;
+    private static ArrayList<Integer> allProps;
 
     private MaxSatSolver() {
         maxClausesSatisfied = 0;
         clausesSatisfied = new ArrayList<Clause>();
         truthAssignment = new HashMap<Integer, Boolean>();
+        allProps = new ArrayList<Integer>();
     }
 
     public static MaxSatSolver getInstance() {
@@ -42,21 +44,36 @@ public class MaxSatSolver {
         return clausesSatisfied;
     }
 
-    public static void bruteForceSolve(String cnf) {
+    public static void maxSat(String cnf, int method) {
+        maxClausesSatisfied = 0;
+        truthAssignment = new HashMap<Integer, Boolean>();
+
         CnfParser parser = CnfParser.getInstance();
         parser.parseCnf(cnf);
 
         ArrayList<Clause> parsedInformation = parser.getParsedInformation();
-        ArrayList<Integer> props = parser.getAllPropositions();
-        int numProps = props.size();
+        allProps = parser.getAllPropositions();
 
-        HashMap<Integer, Boolean> assignment = initTruthAssignment(props);
+        if (method == 0) {
+            bruteForceSolve(parsedInformation);
+        } else if (method == 1) {
+            branchAndBoundSolve(parsedInformation);
+        }
+    }
 
-        int iterations = (int)Math.pow(2, numProps);
+    public static void branchAndBoundSolve(ArrayList<Clause> parsedInformation) {
+
+    }
+
+    public static void bruteForceSolve(ArrayList<Clause> parsedInformation) {
+
+        HashMap<Integer, Boolean> assignment = initTruthAssignment();
+
+        int iterations = (int)Math.pow(2, allProps.size());
 
         for (int i = 0; i < iterations; i++) {
             int maxCount = 0;
-            HashMap<Integer, Boolean> currAssignment = getTruthAssignment(i, assignment, props);
+            HashMap<Integer, Boolean> currAssignment = getTruthAssignment(i, assignment);
             ArrayList<Clause> potentialSatisfiedClauses = new ArrayList<Clause>();
 
             //check satisfiability of each clause
@@ -74,19 +91,19 @@ public class MaxSatSolver {
         }
     }
 
-    public static HashMap<Integer, Boolean> initTruthAssignment(ArrayList<Integer> props) {
+    public static HashMap<Integer, Boolean> initTruthAssignment() {
         HashMap<Integer, Boolean> assignment = new HashMap<Integer, Boolean>();
 
-        for (int i = 0; i < props.size(); i++) {
-            assignment.put(props.get(i), false);
+        for (int i = 0; i < allProps.size(); i++) {
+            assignment.put(allProps.get(i), false);
         }
         return assignment;
     }
 
-    public static HashMap<Integer, Boolean> getTruthAssignment(int iteration, HashMap<Integer, Boolean> assignment, ArrayList<Integer> props) {
+    public static HashMap<Integer, Boolean> getTruthAssignment(int iteration, HashMap<Integer, Boolean> assignment) {
 
-        for (int i = 0; i < props.size(); i++) {
-            int n = props.get(i);
+        for (int i = 0; i < allProps.size(); i++) {
+            int n = allProps.get(i);
             if (iteration%2 == 0) {
                 assignment.put(n, false);
             } else {

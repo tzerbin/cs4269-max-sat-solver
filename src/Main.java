@@ -21,7 +21,7 @@ public class Main {
         System.out.println("CNF: " + CNF);
 
         MaxSatSolver maxSatSolver = MaxSatSolver.getInstance();
-        maxSatSolver.bruteForceSolve(CNF);
+        maxSatSolver.maxSat(CNF, 0);
 
         System.out.println("Max clauses: " + maxSatSolver.getMaxClausesSatisfied());
         maxSatSolver.printClausesSat();
