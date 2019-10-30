@@ -53,15 +53,26 @@ public class MaxSatSolver {
 
         ArrayList<Clause> parsedInformation = parser.getParsedInformation();
         allProps = parser.getAllPropositions();
+        int numClauses = parsedInformation.size();
 
         if (method == 0) {
             bruteForceSolve(parsedInformation);
         } else if (method == 1) {
-            branchAndBoundSolve(parsedInformation, parsedInformation.size());
+            maxClausesSatisfied = numClauses - branchAndBoundSolve(parsedInformation, numClauses);
         }
     }
 
+    // https://www.researchgate.net/publication/2950789_Improved_Branch_and_Bound_Algorithms_for_MAX-SAT
     private static int branchAndBoundSolve(ArrayList<Clause> clauses, int ub) {
+
+        int lb = lowerBound(clauses);
+
+        if (lb >= ub) {
+            return lb;
+        }
+        if (lb == ub-1) {
+            clauses = unitProp(clauses);
+        }
 
         int numEmpty = emptyClauses(clauses);
         // Formula is empty or all clauses are empty
@@ -69,16 +80,8 @@ public class MaxSatSolver {
             return numEmpty;
         }
 
-        int lb = lowerBound(clauses);
+        int var = selectVariable(clauses);
 
-        if (lb >= ub) {
-            return clauses.size() + 1;
-        }
-        if (lb == ub-1) {
-            clauses = unitProp(clauses);
-        }
-
-        int var = selectVariable();
         ub = Math.min(ub, branchAndBoundSolve(setVariable(clauses, var, true), ub));
         return Math.min(ub, branchAndBoundSolve(setVariable(clauses, var, false), ub));
     }
@@ -113,13 +116,52 @@ public class MaxSatSolver {
     }
 
     private static int lowerBound(ArrayList<Clause> clauses) {
-        //TODO
-        return 0;
+
+        //TODO: can be further improved by implementing underestimation
+        return emptyClauses(clauses);
     }
 
-    private static int selectVariable() {
-        //TODO: choose a heuristic to select a variable from allProp
-        return 0;
+    private static int selectVariable(ArrayList<Clause> clauses) {
+        // Weighted Clause Length variable selection heuristic
+        int w1 = 1, w2 = 3;
+        int max = 0;
+        int selectedVar = -1;
+        int minClauseLen = -1;
+        int minClauseIdx = 0;
+
+        for (int prop : allProps) {
+            int unit = 0;
+            int binary = 0;
+            for (int i = 0; i < clauses.size(); i++) {
+                Clause clause = clauses.get(i);
+                int len = clause.getLength();
+                if (len == 1) {
+                    if (clause.getLiteralAt(0).proposition == prop) {
+                        unit++;
+                    }
+                } else if (len == 2) {
+                    if (clause.getLiteralAt(0).proposition == prop || clause.getLiteralAt(1).proposition == prop) {
+                        binary++;
+                    }
+                } else if (len > 0) {
+                    if (minClauseLen == -1 || len < minClauseLen) {
+                        minClauseLen = len;
+                        minClauseIdx = i;
+                    }
+                }
+            }
+            int score = (w1 * unit) + (w2 * binary);
+            if (score > max) {
+                max = score;
+                selectedVar = prop;
+            }
+        }
+
+        if (selectedVar == -1) {
+            //select arbitrary prop from shortest clause
+            return clauses.get(minClauseIdx).getLiteralAt(0).proposition;
+        }
+        return selectedVar;
     }
 
     private static ArrayList<Clause> setVariable(ArrayList<Clause> clauses, int var, boolean isNeg) {

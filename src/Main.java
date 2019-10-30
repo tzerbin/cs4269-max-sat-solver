@@ -21,10 +21,15 @@ public class Main {
         System.out.println("CNF: " + CNF);
 
         MaxSatSolver maxSatSolver = MaxSatSolver.getInstance();
-        maxSatSolver.maxSat(CNF, 0);
 
+        System.out.println("Brute Force Method:");
+        maxSatSolver.maxSat(CNF, 0);
         System.out.println("Max clauses: " + maxSatSolver.getMaxClausesSatisfied());
-        maxSatSolver.printClausesSat();
+        //maxSatSolver.printClausesSat();
         System.out.println("Truth assignment: " + maxSatSolver.getTruthAssignment().toString());
+
+        System.out.println("Branch and Bound Method:");
+        maxSatSolver.maxSat(CNF, 1);
+        System.out.println("Max clauses: " + maxSatSolver.getMaxClausesSatisfied());
     }
 }
