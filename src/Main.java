@@ -23,13 +23,19 @@ public class Main {
         MaxSatSolver maxSatSolver = MaxSatSolver.getInstance();
 
         System.out.println("Brute Force Method:");
+        long startTime = System.nanoTime();
         maxSatSolver.maxSat(CNF, 0);
+        long elapsedTime = System.nanoTime() - startTime;
         System.out.println("Max clauses: " + maxSatSolver.getMaxClausesSatisfied());
+        System.out.println("Time taken(ms): " + elapsedTime/1000000);
         //maxSatSolver.printClausesSat();
         System.out.println("Truth assignment: " + maxSatSolver.getTruthAssignment().toString());
 
         System.out.println("Branch and Bound Method:");
+        startTime = System.nanoTime();
         maxSatSolver.maxSat(CNF, 1);
+        elapsedTime = System.nanoTime() - startTime;
         System.out.println("Max clauses: " + maxSatSolver.getMaxClausesSatisfied());
+        System.out.println("Time taken(ms): " + elapsedTime/1000000);
     }
 }
