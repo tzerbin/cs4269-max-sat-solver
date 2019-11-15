@@ -13,6 +13,8 @@ public class Clause {
         literals.add(l);
     }
 
+    public void removeLiteral() { literals.remove(literals.size() - 1); }
+
     public int getLength() { return literals.size(); }
 
     public Literal getLiteralAt(int i) { return literals.get(i); }

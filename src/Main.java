@@ -23,13 +23,21 @@ public class Main {
         MaxSatSolver maxSatSolver = MaxSatSolver.getInstance();
 
         System.out.println("Brute Force Method:");
-        maxSatSolver.maxSat(CNF, 0);
+        maxSatSolver.maxSat(CNF, 0, maxProp);
         System.out.println("Max clauses: " + maxSatSolver.getMaxClausesSatisfied());
         //maxSatSolver.printClausesSat();
         System.out.println("Truth assignment: " + maxSatSolver.getTruthAssignment().toString());
 
+        System.out.println();
+
         System.out.println("Branch and Bound Method:");
-        maxSatSolver.maxSat(CNF, 1);
+        maxSatSolver.maxSat(CNF, 1, maxProp);
         System.out.println("Max clauses: " + maxSatSolver.getMaxClausesSatisfied());
+
+        System.out.println();
+
+        System.out.println("SAT-based Method:");
+        maxSatSolver.maxSat(CNF, 2, maxProp);
+        //System.out.println("Max clauses: " + maxSatSolver.getMaxClausesSatisfied());
     }
 }

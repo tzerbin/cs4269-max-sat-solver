@@ -6,6 +6,8 @@ import generator.CnfGenerator;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import java.util.HashSet;
+import java.util.LinkedList;
 import parser.CnfParser;
 
 public class MaxSatSolver {
@@ -44,7 +46,7 @@ public class MaxSatSolver {
         return clausesSatisfied;
     }
 
-    public static void maxSat(String cnf, int method) {
+    public static void maxSat(String cnf, int method, int maxProp) {
         maxClausesSatisfied = 0;
         truthAssignment = new HashMap<Integer, Boolean>();
 
@@ -59,6 +61,8 @@ public class MaxSatSolver {
             bruteForceSolve(parsedInformation);
         } else if (method == 1) {
             maxClausesSatisfied = numClauses - branchAndBoundSolve(parsedInformation, numClauses);
+        } else if (method == 2) {
+            maxClausesSatisfied = satBasedSolveBinary(parsedInformation, maxProp);
         }
     }
 
@@ -85,6 +89,8 @@ public class MaxSatSolver {
         ub = Math.min(ub, branchAndBoundSolve(setVariable(clauses, var, true), ub));
         return Math.min(ub, branchAndBoundSolve(setVariable(clauses, var, false), ub));
     }
+
+
 
     private static ArrayList<Clause> unitProp(ArrayList<Clause> clauses) {
 
@@ -254,6 +260,86 @@ public class MaxSatSolver {
             }
         }
         return false;
+    }
+
+    private static int satBasedSolveBinary(ArrayList<Clause> clauses, int maxProp) {
+
+        int upperBound = clauses.size();
+        int lowerBound = 0;
+        boolean selectedClausesSatisfiable = false;
+
+        while (upperBound != lowerBound + 1) {
+
+            int middle = (upperBound + lowerBound) / 2;
+
+            /*
+            System.out.println("ALL CLAUSES");
+            for (int j = 0; j < clauses.size(); j ++) {
+                System.out.println(clauses.get(j).toString());
+            }*/
+
+            ArrayList<int[]> combinations = getAllCombinations(clauses.size(), middle);
+
+            // For each combination, select all other clauses, and check if it is satisfiable.
+            for (int i = 0; i < combinations.size(); i ++) {
+
+                ArrayList<Clause> selectedClauses = new ArrayList<Clause>();
+                HashSet<Integer> clausesIndexToRemove = new HashSet<Integer>();
+                selectedClausesSatisfiable = false;
+
+                for (int j = 0; j < middle; j ++) {
+                    clausesIndexToRemove.add(combinations.get(i)[j]);
+                }
+
+                for (int j = 0; j < clauses.size(); j ++) {
+                    if (!clausesIndexToRemove.contains(j))
+                        selectedClauses.add(clauses.get(j));
+                }
+
+                bruteForceSolve(selectedClauses); // Faulty
+                if (maxClausesSatisfied == maxProp - middle) {
+                    selectedClausesSatisfiable = true;
+                    break;
+                }
+            }
+
+            if (selectedClausesSatisfiable)
+                upperBound = middle;
+            else {
+                System.out.println("HIT LOWER HERE");
+                lowerBound = middle;
+            }
+
+        }
+
+        System.out.println("Max clauses: " + upperBound);
+        return upperBound;
+    }
+
+    private static ArrayList<int[]> getAllCombinations(int n, int r) {
+        ArrayList<int[]> combinations = new ArrayList<int[]>();
+        int[] combination = new int[r];
+
+        // initialize with lowest lexicographic combination
+        for (int i = 0; i < r; i++) {
+            combination[i] = i;
+        }
+
+        while (combination[r - 1] < n) {
+            combinations.add(combination.clone());
+
+            // generate next combination in lexicographic order
+            int t = r - 1;
+            while (t != 0 && combination[t] == n - r + t) {
+                t--;
+            }
+            combination[t]++;
+            for (int i = t + 1; i < r; i++) {
+                combination[i] = combination[i - 1] + 1;
+            }
+        }
+
+        return combinations;
     }
 
     public static void printClausesSat() {
