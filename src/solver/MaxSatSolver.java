@@ -305,10 +305,8 @@ public class MaxSatSolver {
 
             if (selectedClausesSatisfiable)
                 upperBound = middle;
-            else {
-                System.out.println("HIT LOWER HERE");
+            else
                 lowerBound = middle;
-            }
 
         }
 
