@@ -23,21 +23,31 @@ public class Main {
         MaxSatSolver maxSatSolver = MaxSatSolver.getInstance();
 
         System.out.println("Brute Force Method:");
+        long startTime = System.nanoTime();
         maxSatSolver.maxSat(CNF, 0, maxProp);
+        long elapsedTime = System.nanoTime() - startTime;
         System.out.println("Max clauses: " + maxSatSolver.getMaxClausesSatisfied());
+        System.out.println("Time taken(ms): " + elapsedTime/1000000);
         //maxSatSolver.printClausesSat();
         System.out.println("Truth assignment: " + maxSatSolver.getTruthAssignment().toString());
 
         System.out.println();
 
         System.out.println("Branch and Bound Method:");
+        startTime = System.nanoTime();
         maxSatSolver.maxSat(CNF, 1, maxProp);
+        elapsedTime = System.nanoTime() - startTime;
         System.out.println("Max clauses: " + maxSatSolver.getMaxClausesSatisfied());
+        System.out.println("Time taken(ms): " + elapsedTime/1000000);
 
         System.out.println();
 
         System.out.println("SAT-based Method:");
-        maxSatSolver.maxSat(CNF, 2, maxProp);
         //System.out.println("Max clauses: " + maxSatSolver.getMaxClausesSatisfied());
+        startTime = System.nanoTime();
+        maxSatSolver.maxSat(CNF, 2, maxProp);
+        elapsedTime = System.nanoTime() - startTime;
+        //System.out.println("Max clauses: " + maxSatSolver.getMaxClausesSatisfied());
+        System.out.println("Time taken(ms): " + elapsedTime/1000000);
     }
 }
